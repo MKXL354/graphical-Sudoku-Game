@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="417.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="417.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="difSelectController">
    <children>
       <Button fx:id="easyButton" layoutX="188.0" layoutY="170.0" mnemonicParsing="false" onAction="#easyButtonPressed" text="easy" />
       <Text layoutX="169.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="select difficulty" />

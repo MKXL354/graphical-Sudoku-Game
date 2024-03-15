@@ -41,7 +41,7 @@ public class difSelectController {
 
     @FXML
     void easyButtonPressed(ActionEvent event) {
-
+        changeScene("FXML/sudokuGrid.fxml");
     }
 
     @FXML
