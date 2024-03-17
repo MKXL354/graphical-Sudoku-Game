@@ -68,7 +68,28 @@ public class SudokuGridController {
                 });
             }
         }
+        // For 3x3 blocks
+        addPuzzleStyle();
         createPuzzle(difficulty);
+    }
+
+    private void addPuzzleStyle() {
+        for (int i = 0; i < rank; i++) {
+            for (int j = 0; j < rank; j++) {
+                if (i % 3 != 2 && j % 3 == 2) {
+                    textFields[i][j].getStyleClass().add("thick-right-line");
+                }
+                else if (i % 3 == 2 && j % 3 != 2) {
+                    textFields[i][j].getStyleClass().add("thick-down-line");
+                }
+                else if (i % 3 == 2 && j % 3 == 2) {
+                    textFields[i][j].getStyleClass().add("thick-right-down-line");
+                }
+                else{
+                    textFields[i][j].getStyleClass().add("default-line");
+                }
+            }
+        }
     }
 
     // Creates the sudoku puzzle from file
@@ -86,7 +107,7 @@ public class SudokuGridController {
                 break;
         }
         fileName = String.format("puzzles/%s.txt", fileName);
-        Font boldFont = Font.font("Arial", FontWeight.BOLD, 14);
+        Font boldFont = Font.font("Arial", FontWeight.BOLD, 13);
         try {
             File file = new File(fileName);
             Scanner scanner = new Scanner(file);

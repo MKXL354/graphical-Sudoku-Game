@@ -20,7 +20,6 @@ public class Main extends Application {
         launch(args);
     }
 }
-// TODO: add 3x3 blocks
 // TODO: add timer
 // TODO: add stop and resume
 // TODO: beautify
