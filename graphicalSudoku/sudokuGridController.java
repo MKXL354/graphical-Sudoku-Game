@@ -1,12 +1,14 @@
+package graphicalSudoku;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.function.UnaryOperator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,7 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class sudokuGridController implements Initializable {
+public class sudokuGridController {
 
     private final int rank = 9;
     private TextField[][] textFields = new TextField[rank][rank];
@@ -30,8 +32,7 @@ public class sudokuGridController implements Initializable {
     @FXML
     private Button backButton;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void init(int difficulty) {
         // Populate the puzzle grid with textFields
         for (int row = 0; row < rank; row++) {
             for (int column = 0; column < rank; column++) {
@@ -63,6 +64,40 @@ public class sudokuGridController implements Initializable {
                 });
             }
         }
+        createPuzzle(difficulty);
+    }
+
+    // Creates the sudoku puzzle from file
+    private void createPuzzle(int difficulty) {
+        String fileName = "";
+        switch (difficulty) {
+            case 0:
+                fileName = "easy";
+                break;
+            case 1:
+                fileName = "medium";
+                break;
+            case 2:
+                fileName = "hard";
+                break;
+        }
+        fileName = String.format("puzzles/%s.txt", fileName);
+        try {
+            File file = new File(fileName);
+            Scanner scanner = new Scanner(file);
+            int readNumber;
+            for (int i = 0; i < rank; i++) {
+                for (int j = 0; j < rank; j++) {
+                    readNumber = scanner.nextInt();
+                    if (readNumber != 0) {
+                        textFields[i][j].setText("" + readNumber);
+                    }
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void changeDuplicatesColor(int currentRow, int currentColumn, String oldText, String newText) {
@@ -71,7 +106,7 @@ public class sudokuGridController implements Initializable {
         isSolved = true;
         for (int i = 0; i < rank; i++) {
             for (int j = 0; j < rank; j++) {
-                if(textFields[i][j].getText().equals("")){
+                if (textFields[i][j].getText().equals("")) {
                     isSolved = false;
                 }
                 textFields[i][j].setStyle("-fx-text-fill: black;");
@@ -106,7 +141,7 @@ public class sudokuGridController implements Initializable {
                 }
             }
         }
-        if(isSolved){
+        if (isSolved) {
             // congrats func and back to menu
         }
     }

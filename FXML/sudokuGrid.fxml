@@ -33,6 +33,5 @@
         </rowConstraints>
       </GridPane>
       <Button fx:id="backButton" layoutX="188.0" layoutY="415.0" mnemonicParsing="false" onAction="#backButtonPressed" text="back" />
-      <Button fx:id="check" layoutX="186.0" layoutY="45.0" mnemonicParsing="false" onAction="#check" text="check" />
    </children>
 </Pane>
