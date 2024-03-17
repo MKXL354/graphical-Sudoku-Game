@@ -22,12 +22,16 @@ public class sudokuGridController implements Initializable {
 
     private final int rank = 9;
     private TextField[][] textFields = new TextField[rank][rank];
+    private boolean isSolved = false;
 
     @FXML
     private GridPane puzzle;
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private Button check;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,9 +70,13 @@ public class sudokuGridController implements Initializable {
 
     private void changeDuplicatesColor(int currentRow, int currentColumn, String oldText, String newText) {
         TextField textField = textFields[currentRow][currentColumn];
-        // Default to black to reset color
+        // Default to black as reset color
+        isSolved = true;
         for (int i = 0; i < rank; i++) {
             for (int j = 0; j < rank; j++) {
+                if(textFields[i][j].getText().equals("")){
+                    isSolved = false;
+                }
                 textFields[i][j].setStyle("-fx-text-fill: black;");
             }
         }
@@ -78,12 +86,14 @@ public class sudokuGridController implements Initializable {
             if (j != currentColumn && textFields[currentRow][j].getText().equals(newText)) {
                 textField.setStyle("-fx-text-fill: black;");
                 textFields[currentRow][j].setStyle("-fx-text-fill: red;");
+                isSolved = false;
             }
         }
         for (int i = 0; i < rank; i++) {
             if (i != currentRow && textFields[i][currentColumn].getText().equals(newText)) {
                 textField.setStyle("-fx-text-fill: black;");
                 textFields[i][currentColumn].setStyle("-fx-text-fill: red;");
+                isSolved = false;
             }
         }
 
@@ -95,6 +105,7 @@ public class sudokuGridController implements Initializable {
                 if ((i != currentRow || j != currentColumn) && textFields[i][j].getText().equals(newText)) {
                     textFields[i][j].setStyle("-fx-text-fill: red;");
                     textFields[currentRow][currentColumn].setStyle("-fx-text-fill: red;");
+                    isSolved = false;
                 }
             }
         }
@@ -118,6 +129,10 @@ public class sudokuGridController implements Initializable {
         textField.setTextFormatter(formatter);
     }
 
+    public boolean getIsSolved() {
+        return isSolved;
+    }
+
     @FXML
     void backButtonPressed(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FXML/difSelect.fxml"));
@@ -127,4 +142,8 @@ public class sudokuGridController implements Initializable {
         primaryStage.show();
     }
 
+    @FXML
+    void check(ActionEvent event) throws IOException {
+        System.out.println(isSolved);
+    }
 }
