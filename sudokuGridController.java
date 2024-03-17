@@ -30,9 +30,6 @@ public class sudokuGridController implements Initializable {
     @FXML
     private Button backButton;
 
-    @FXML
-    private Button check;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Populate the puzzle grid with textFields
@@ -109,7 +106,12 @@ public class sudokuGridController implements Initializable {
                 }
             }
         }
+        if(isSolved){
+            // congrats func and back to menu
+        }
     }
+
+    // congrats func and back to menu
 
     private void addTextFormatter(TextField textField) {
         UnaryOperator<Change> textFilter = c -> {
@@ -129,10 +131,6 @@ public class sudokuGridController implements Initializable {
         textField.setTextFormatter(formatter);
     }
 
-    public boolean getIsSolved() {
-        return isSolved;
-    }
-
     @FXML
     void backButtonPressed(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FXML/difSelect.fxml"));
@@ -140,10 +138,5 @@ public class sudokuGridController implements Initializable {
         Stage primaryStage = (Stage) backButton.getScene().getWindow();
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    @FXML
-    void check(ActionEvent event) throws IOException {
-        System.out.println(isSolved);
     }
 }
