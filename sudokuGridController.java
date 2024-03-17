@@ -20,8 +20,8 @@ import javafx.stage.Stage;
 
 public class sudokuGridController implements Initializable {
 
-    private TextField[][] textFields = new TextField[9][9];
     private final int rank = 9;
+    private TextField[][] textFields = new TextField[rank][rank];
 
     @FXML
     private GridPane puzzle;
@@ -56,6 +56,46 @@ public class sudokuGridController implements Initializable {
                         textFields[currentRow][currentColumn + 1].requestFocus();
                     }
                 });
+
+                textField.textProperty().addListener((obs, oldText, newText) -> {
+                    changeDuplicatesColor(currentRow, currentColumn, oldText, newText);
+                });
+            }
+        }
+    }
+
+    private void changeDuplicatesColor(int currentRow, int currentColumn, String oldText, String newText) {
+        TextField textField = textFields[currentRow][currentColumn];
+        // Default to black to reset color
+        for (int i = 0; i < rank; i++) {
+            for (int j = 0; j < rank; j++) {
+                textFields[i][j].setStyle("-fx-text-fill: black;");
+            }
+        }
+
+        // Each row and column
+        for (int j = 0; j < rank; j++) {
+            if (j != currentColumn && textFields[currentRow][j].getText().equals(newText)) {
+                textField.setStyle("-fx-text-fill: black;");
+                textFields[currentRow][j].setStyle("-fx-text-fill: red;");
+            }
+        }
+        for (int i = 0; i < rank; i++) {
+            if (i != currentRow && textFields[i][currentColumn].getText().equals(newText)) {
+                textField.setStyle("-fx-text-fill: black;");
+                textFields[i][currentColumn].setStyle("-fx-text-fill: red;");
+            }
+        }
+
+        // To hanlde repetition in 3x3 grids
+        int startRow = currentRow - currentRow % 3;
+        int startColumn = currentColumn - currentColumn % 3;
+        for (int i = startRow; i < startRow + 3; i++) {
+            for (int j = startColumn; j < startColumn + 3; j++) {
+                if ((i != currentRow || j != currentColumn) && textFields[i][j].getText().equals(newText)) {
+                    textFields[i][j].setStyle("-fx-text-fill: red;");
+                    textFields[currentRow][currentColumn].setStyle("-fx-text-fill: red;");
+                }
             }
         }
     }
