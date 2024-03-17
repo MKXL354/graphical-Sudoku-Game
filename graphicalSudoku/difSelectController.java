@@ -1,4 +1,5 @@
 package graphicalSudoku;
+
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
@@ -9,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class difSelectController {
+public class DifSelectController {
 
     @FXML
     private Button backButton;
@@ -28,7 +29,7 @@ public class difSelectController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(newScene));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            Stage primaryStage = (Stage)backButton.getScene().getWindow();
+            Stage primaryStage = (Stage) backButton.getScene().getWindow();
             primaryStage.setScene(scene);
             primaryStage.show();
             return loader.getController();
@@ -37,7 +38,7 @@ public class difSelectController {
             return null;
         }
     }
-    
+
     @FXML
     void backButtonPressed(ActionEvent event) {
         changeScene("FXML/mainMenu.fxml");
@@ -45,19 +46,19 @@ public class difSelectController {
 
     @FXML
     void easyButtonPressed(ActionEvent event) {
-        sudokuGridController controller = (sudokuGridController)changeScene("FXML/sudokuGrid.fxml");
+        SudokuGridController controller = (SudokuGridController) changeScene("FXML/sudokuGrid.fxml");
         controller.init(0);
     }
 
     @FXML
     void mediumButtonPressed(ActionEvent event) {
-        sudokuGridController controller = (sudokuGridController)changeScene("FXML/sudokuGrid.fxml");
+        SudokuGridController controller = (SudokuGridController) changeScene("FXML/sudokuGrid.fxml");
         controller.init(1);
     }
 
     @FXML
     void hardButtonPressed(ActionEvent event) {
-        sudokuGridController controller = (sudokuGridController)changeScene("FXML/sudokuGrid.fxml");
+        SudokuGridController controller = (SudokuGridController) changeScene("FXML/sudokuGrid.fxml");
         controller.init(2);
     }
 

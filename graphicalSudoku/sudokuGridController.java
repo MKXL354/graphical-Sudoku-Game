@@ -11,16 +11,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class sudokuGridController {
+public class SudokuGridController {
 
     private final int rank = 9;
     private TextField[][] textFields = new TextField[rank][rank];
@@ -82,6 +86,7 @@ public class sudokuGridController {
                 break;
         }
         fileName = String.format("puzzles/%s.txt", fileName);
+        Font boldFont = Font.font("Arial", FontWeight.BOLD, 14);
         try {
             File file = new File(fileName);
             Scanner scanner = new Scanner(file);
@@ -90,7 +95,9 @@ public class sudokuGridController {
                 for (int j = 0; j < rank; j++) {
                     readNumber = scanner.nextInt();
                     if (readNumber != 0) {
+                        textFields[i][j].setFont(boldFont);
                         textFields[i][j].setText("" + readNumber);
+                        textFields[i][j].setEditable(false);
                     }
                 }
             }
@@ -142,11 +149,9 @@ public class sudokuGridController {
             }
         }
         if (isSolved) {
-            // congrats func and back to menu
+            solvedPuzzle();
         }
     }
-
-    // congrats func and back to menu
 
     private void addTextFormatter(TextField textField) {
         UnaryOperator<Change> textFilter = c -> {
@@ -166,12 +171,32 @@ public class sudokuGridController {
         textField.setTextFormatter(formatter);
     }
 
+    private void solvedPuzzle() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Victory!");
+        alert.setHeaderText(null);
+        alert.setContentText("congratulations! You solved the puzzle!");
+        alert.showAndWait();
+        changeScene("FXML/mainMenu.fxml");
+    }
+
+    private Object changeScene(String newScene) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(newScene));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage primaryStage = (Stage) backButton.getScene().getWindow();
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            return loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @FXML
-    void backButtonPressed(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("FXML/difSelect.fxml"));
-        Scene scene = new Scene(root);
-        Stage primaryStage = (Stage) backButton.getScene().getWindow();
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    void backButtonPressed(ActionEvent event) {
+        changeScene("FXML/difSelect.fxml");
     }
 }

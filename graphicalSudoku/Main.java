@@ -20,3 +20,11 @@ public class Main extends Application {
         launch(args);
     }
 }
+// TODO: add 3x3 blocks
+// TODO: add timer
+// TODO: add stop and resume
+// TODO: beautify
+// TODO: maybe add animations
+// TODO: add leaderboard
+// TODO: maybe weak the way the puzzle is loaded
+// TODO: maybe refacor the code

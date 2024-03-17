@@ -10,8 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class mainMenuController {
-    
+public class MainMenuController {
+
     @FXML
     private Button exitButton;
 
@@ -24,10 +24,10 @@ public class mainMenuController {
     }
 
     @FXML
-    void startSelected(ActionEvent event) throws IOException{
+    void startSelected(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FXML/difSelect.fxml"));
         Scene scene = new Scene(root);
-        Stage primaryStage = (Stage)startButton.getScene().getWindow();
+        Stage primaryStage = (Stage) startButton.getScene().getWindow();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
