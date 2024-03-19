@@ -3,7 +3,10 @@ package graphicalSudoku;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import javafx.event.ActionEvent;
@@ -28,7 +31,7 @@ public class SudokuGridController {
 
     private final int rank = 9;
     private TextField[][] textFields = new TextField[rank][rank];
-    private boolean isSolved = false;
+    private HashMap<TextField, HashSet<TextField>> collisions = new HashMap<TextField, HashSet<TextField>>();
 
     @FXML
     private GridPane puzzle;
@@ -78,14 +81,11 @@ public class SudokuGridController {
             for (int j = 0; j < rank; j++) {
                 if (i % 3 != 2 && j % 3 == 2) {
                     textFields[i][j].getStyleClass().add("thick-right-line");
-                }
-                else if (i % 3 == 2 && j % 3 != 2) {
+                } else if (i % 3 == 2 && j % 3 != 2) {
                     textFields[i][j].getStyleClass().add("thick-down-line");
-                }
-                else if (i % 3 == 2 && j % 3 == 2) {
+                } else if (i % 3 == 2 && j % 3 == 2) {
                     textFields[i][j].getStyleClass().add("thick-right-down-line");
-                }
-                else{
+                } else {
                     textFields[i][j].getStyleClass().add("default-line");
                 }
             }
@@ -129,48 +129,57 @@ public class SudokuGridController {
     }
 
     private void changeDuplicatesColor(int currentRow, int currentColumn, String oldText, String newText) {
+        if (newText.equals(oldText)) {
+            return;
+        }
+
         TextField textField = textFields[currentRow][currentColumn];
-        // Default to black as reset color
-        isSolved = true;
-        for (int i = 0; i < rank; i++) {
-            for (int j = 0; j < rank; j++) {
-                if (textFields[i][j].getText().equals("")) {
-                    isSolved = false;
-                }
-                textFields[i][j].setStyle("-fx-text-fill: black;");
-            }
+        if (collisions.containsKey(textField)) {
+            Set<TextField> keySet = new HashSet<TextField>();
+            keySet.add(textField);
+            applyColor(keySet, "black");
+            collisions.remove(textField);
         }
 
+        HashSet<TextField> newColissions = new HashSet<TextField>();
         // Each row and column
-        for (int j = 0; j < rank; j++) {
-            if (j != currentColumn && textFields[currentRow][j].getText().equals(newText)) {
-                textField.setStyle("-fx-text-fill: black;");
-                textFields[currentRow][j].setStyle("-fx-text-fill: red;");
-                isSolved = false;
+        if(!newText.equals("")){
+            for (int j = 0; j < rank; j++) {
+                if (j != currentColumn && textFields[currentRow][j].getText().equals(newText)) {
+                    newColissions.add(textFields[currentRow][j]);
+                }
             }
-        }
-        for (int i = 0; i < rank; i++) {
-            if (i != currentRow && textFields[i][currentColumn].getText().equals(newText)) {
-                textField.setStyle("-fx-text-fill: black;");
-                textFields[i][currentColumn].setStyle("-fx-text-fill: red;");
-                isSolved = false;
+            for (int i = 0; i < rank; i++) {
+                if (i != currentRow && textFields[i][currentColumn].getText().equals(newText)) {
+                    newColissions.add(textFields[i][currentColumn]);
+                }
             }
-        }
-
-        // To hanlde repetition in 3x3 grids
-        int startRow = currentRow - currentRow % 3;
-        int startColumn = currentColumn - currentColumn % 3;
-        for (int i = startRow; i < startRow + 3; i++) {
-            for (int j = startColumn; j < startColumn + 3; j++) {
-                if ((i != currentRow || j != currentColumn) && textFields[i][j].getText().equals(newText)) {
-                    textFields[i][j].setStyle("-fx-text-fill: red;");
-                    textFields[currentRow][currentColumn].setStyle("-fx-text-fill: red;");
-                    isSolved = false;
+            // To hanlde repetition in 3x3 grids
+            int startRow = currentRow - currentRow % 3;
+            int startColumn = currentColumn - currentColumn % 3;
+            for (int i = startRow; i < startRow + 3; i++) {
+                for (int j = startColumn; j < startColumn + 3; j++) {
+                    if ((i != currentRow || j != currentColumn) && textFields[i][j].getText().equals(newText)) {
+                        newColissions.add(textFields[i][j]);
+                    }
                 }
             }
         }
-        if (isSolved) {
-            solvedPuzzle();
+        
+        if(newColissions.size()>0){
+            collisions.put(textField, newColissions);
+        }
+        applyColor(collisions.keySet(), "red");
+        checkSolvedPuzzle();
+    }
+
+    private void applyColor(Set<TextField> textFields, String color) {
+        color = String.format("-fx-text-fill: %s;", color);
+        for (TextField textField : textFields) {
+            textField.setStyle(color);
+            for (TextField field : collisions.get(textField)) {
+                field.setStyle(color);
+            }
         }
     }
 
@@ -192,7 +201,17 @@ public class SudokuGridController {
         textField.setTextFormatter(formatter);
     }
 
-    private void solvedPuzzle() {
+    private void checkSolvedPuzzle() {
+        if (collisions.size() > 0) {
+            return;
+        }
+        for (int i = 0; i < rank; i++) {
+            for (int j = 0; j < rank; j++) {
+                if (textFields[i][j].getText().equals("")) {
+                    return;
+                }
+            }
+        }
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Victory!");
         alert.setHeaderText(null);
