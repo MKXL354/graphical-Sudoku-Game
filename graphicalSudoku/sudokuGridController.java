@@ -3,6 +3,7 @@ package graphicalSudoku;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -31,7 +32,7 @@ public class SudokuGridController {
 
     private final int rank = 9;
     private TextField[][] textFields = new TextField[rank][rank];
-    private HashMap<TextField, HashSet<TextField>> collisions = new HashMap<TextField, HashSet<TextField>>();
+    private HashMap<TextField, ArrayList<TextField>> collisions = new HashMap<TextField, ArrayList<TextField>>();
 
     @FXML
     private GridPane puzzle;
@@ -141,9 +142,9 @@ public class SudokuGridController {
             collisions.remove(textField);
         }
 
-        HashSet<TextField> newColissions = new HashSet<TextField>();
+        ArrayList<TextField> newColissions = new ArrayList<TextField>();
         // Each row and column
-        if(!newText.equals("")){
+        if (!newText.equals("")) {
             for (int j = 0; j < rank; j++) {
                 if (j != currentColumn && textFields[currentRow][j].getText().equals(newText)) {
                     newColissions.add(textFields[currentRow][j]);
@@ -165,8 +166,8 @@ public class SudokuGridController {
                 }
             }
         }
-        
-        if(newColissions.size()>0){
+
+        if (newColissions.size() > 0) {
             collisions.put(textField, newColissions);
         }
         applyColor(collisions.keySet(), "red");
